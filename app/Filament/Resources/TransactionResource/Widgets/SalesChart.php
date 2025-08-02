@@ -6,7 +6,9 @@ use Filament\Widgets\ChartWidget;
 
 class SalesChart extends ChartWidget
 {
-    protected static ?string $heading = 'Chart';
+    protected static ?string $heading = 'Sales Chart';
+    protected static ?string $description = 'Total sales over time';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {
