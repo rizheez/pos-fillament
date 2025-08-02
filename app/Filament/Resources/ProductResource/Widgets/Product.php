@@ -17,11 +17,13 @@ class Product extends BaseWidget
             Stat::make('Total Categories', \App\Models\Category::count())
                 ->description('Total number of product categories')
                 ->color('secondary')
-                ->descriptionIcon('heroicon-m-arrow-trending-down'),
+                ->icon('heroicon-s-folder-open'),
+
 
             Stat::make('Total Stock', \App\Models\Product::sum('stock'))
                 ->description('Total stock available across all products')
                 ->color('success')
+                ->icon('heroicon-s-chart-bar-square')
         ];
     }
 }

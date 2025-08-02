@@ -19,9 +19,11 @@ class TodaySales extends StatsOverviewWidget
             Stat::make('Total Pendapatan Hari Ini', 'Rp ' . number_format(Transaction::whereDate('transaction_date', $today)->sum('total_amount'), 0, ',', '.')),
             //total semua transaksi
             Stat::make('Total Transaksi', Transaction::count())->color('success')
-                ->description('Total transaksi yang telah dilakukan'),
+                ->description('Total transaksi yang telah dilakukan')
+                ->icon('heroicon-m-arrow-trending-up'),
             Stat::make('Total Pendapatan', 'Rp ' . number_format(Transaction::sum('total_amount'), 0, ',', '.'))
                 ->color('success')
+                ->icon('heroicon-m-arrow-trending-up')
                 ->description('Total pendapatan dari semua transaksi')
                 ->chart(Transaction::selectRaw('SUM(total_amount) as total')
                     ->groupBy('transaction_date')

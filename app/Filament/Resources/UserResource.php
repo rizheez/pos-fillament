@@ -51,7 +51,8 @@ class UserResource extends Resource
                             ->dehydrated(fn($get) => filled($get('password'))),
                         Forms\Components\Select::make('roles')
                             ->label('Roles')
-                            ->options(fn() => Role::all()->pluck('name', 'name'))
+                            ->relationship('roles', 'name')
+                            ->options(fn() => Role::all()->pluck('name', 'id'))
                             ->required()
                             ->searchable()
                             ->live(onBlur: true),

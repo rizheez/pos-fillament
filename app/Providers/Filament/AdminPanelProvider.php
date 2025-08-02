@@ -41,7 +41,10 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 \App\Filament\Resources\TransactionResource\Widgets\TodaySales::class,
                 \App\Filament\Resources\ProductResource\Widgets\Product::class,
+
                 // Add other widgets as needed
+                //chart
+                \App\Filament\Resources\TransactionResource\Widgets\SalesChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
