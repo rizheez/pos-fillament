@@ -34,7 +34,7 @@ use App\Filament\Resources\TransactionResource\RelationManagers;
 class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
-
+    protected static ?string $navigationGroup = 'Transactions';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -104,7 +104,7 @@ class TransactionResource extends Resource
                                     ->mask(RawJs::make(<<<'JS'
         $input.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     JS))
-    ->stripCharacters(',')
+                                    ->stripCharacters(',')
                                     ->dehydrated(),
                             ])
                             ->defaultItems(1)
@@ -255,7 +255,6 @@ class TransactionResource extends Resource
             ->headerActions([
                 ExportAction::make(),
             ]);
-
     }
     public static function getRelations(): array
     {
