@@ -14,19 +14,24 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ProductResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use Filament\Forms\Components\Section;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Section::make('Form Produk')
+                ->columns(2)
+                    ->schema([
                 //
+
                 Select::make('category_id')
                     ->label('Kategori')
                     ->relationship('category', 'name')
@@ -35,13 +40,14 @@ class ProductResource extends Resource
                     ->preload()
                     ->live(onBlur: true),
 
-                    TextInput::make('name')
+                TextInput::make('name')
                     ->label('Nama Produk')
                     ->required()
                     ->maxLength(100)
-                    ->live(onBlur: true),
+                    ->live(onBlur: true)
+                    ->disabled(fn(callable $get) => !$get('category_id')),
 
-                    TextInput::make('purchase_price')
+                TextInput::make('purchase_price')
                     ->label('Harga Beli')
                     ->required()
                     ->numeric()
@@ -49,9 +55,10 @@ class ProductResource extends Resource
                     ->step(0.01)
                     ->live(onBlur: true)
                     ->mask(RawJs::make('$money($input)'))
-    ->stripCharacters(','),
+                    ->stripCharacters(',')
+                    ->disabled(fn(callable $get) => !$get('category_id')),
 
-                    TextInput::make('sale_price')
+                TextInput::make('sale_price')
                     ->label('Harga Jual')
                     ->required()
                     ->numeric()
@@ -59,19 +66,21 @@ class ProductResource extends Resource
                     ->step(0.01)
                     ->live(onBlur: true)
                     ->mask(RawJs::make('$money($input)'))
-    ->stripCharacters(','),
+                    ->stripCharacters(',')
+                    ->disabled(fn(callable $get) => !$get('category_id')),
 
-                    TextInput::make('stock')
+                TextInput::make('stock')
                     ->label('Stok')
                     ->required()
                     ->numeric()
                     ->minValue(0)
                     ->live(onBlur: true)
                     ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(','),
+                    ->stripCharacters(',')
+                    ->disabled(fn(callable $get) => !$get('category_id')),
 
+                    ]),
             ]);
-
     }
 
     public static function table(Table $table): Table
@@ -83,8 +92,8 @@ class ProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category.name')->label('Kategori')->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('formatted_purchase_price')->label('Harga Beli')
-                    ->money('IDR', true)
+                Tables\Columns\TextColumn::make('purchase_price')->label('Harga Beli')
+                    ->money('IDR', locale: 'id_ID')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('formatted_sale_price')->label('Harga Jual')
                     ->money('IDR', true)
@@ -109,7 +118,11 @@ class ProductResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ExportBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                ExportAction::make(),
             ]);
     }
 

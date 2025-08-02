@@ -9,13 +9,14 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\CategoryResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CategoryResource\RelationManagers;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Filters\SelectFilter;
 
 class CategoryResource extends Resource
 {
@@ -26,32 +27,35 @@ class CategoryResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-    TextInput::make('name')
-        ->label('Nama Kategori')
-        ->required()
-        ->maxLength(100)
-        ->live(onBlur: true)
-        ->afterStateUpdated(fn (string $state, callable $set) =>
-            $set('slug', Str::slug($state))
-        ),
+            Section::make('Form Kategori')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nama Kategori')
+                        ->required()
+                        ->maxLength(100)
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(
+                            fn(string $state, callable $set) =>
+                            $set('slug', Str::slug($state))
+                        ),
 
-    TextInput::make('slug')
-        ->label('Slug')
-        ->required()
-        ->disabled()
-        ->dehydrated()
-        ->maxLength(100),
-
-
-    Textarea::make('description')
-        ->label('Deskripsi')
-        ->required()
-        ->maxLength(255)
-        ->helperText('Deskripsi kategori ini akan ditampilkan di halaman produk.')
-        ->columnSpan('full'),
-]);
+                    TextInput::make('slug')
+                        ->label('Slug')
+                        ->required()
+                        ->disabled()
+                        ->dehydrated()
+                        ->maxLength(100),
 
 
+                    Textarea::make('description')
+                        ->label('Deskripsi')
+                        ->required()
+                        ->maxLength(255)
+                        ->helperText('Deskripsi kategori ini akan ditampilkan di halaman produk.')
+                        ->columnSpan('full'),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

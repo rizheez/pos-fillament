@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Actions\Action;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use App\Filament\Resources\TransactionResource\RelationManagers;
 
 class TransactionResource extends Resource
@@ -41,7 +43,7 @@ class TransactionResource extends Resource
 
         return $form
             ->schema([
-                Section::make('Transaksi')
+                Section::make('Form Transaksi')
                     ->columns(1)
                     ->schema([
                         DatePicker::make('transaction_date')
@@ -248,7 +250,12 @@ class TransactionResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                ExportBulkAction::make()
+            ])
+            ->headerActions([
+                ExportAction::make(),
             ]);
+
     }
     public static function getRelations(): array
     {
